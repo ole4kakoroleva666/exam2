@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use app\models\User;
 
 /**
  * This is the model class for table "course".
@@ -233,5 +234,12 @@ class Course extends \yii\db\ActiveRecord
     public function setStatusToCompleted()
     {
         $this->status = self::STATUS_COMPLETED;
+    }
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUser()
+    {
+        return $this->hasOne(User::class, ['id' => 'user_id']);
     }
 }

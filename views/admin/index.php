@@ -9,34 +9,52 @@ use yii\grid\GridView;
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Courses';
+$this->title = 'Заявки на курсы';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="course-index">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a('Create Course', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
-            'user_id',
-            'course_name',
-            'start_date',
-            'payment_method',
-            //'status',
             [
-                'class' => ActionColumn::className(),
-                'urlCreator' => function ($action, Course $model, $key, $index, $column) {
-                    return Url::toRoute([$action, 'id' => $model->id]);
-                 }
+                'label' => 'ФИО',
+                'value' => static fn ($model) =>
+                $model->user->FIO,
+
+            ],
+            [
+                'attribute' => 'course_name',
+                'value' => function($model){
+                    return $model->displayCourseName();
+                },
+            ],
+            [
+                'attribute' => 'start_date',
+                'format' => ['date', 'php:d.m.Y'],
+            ],
+            [
+                'attribute' => 'payment_method',
+                'value' => function($model){
+                    return $model->displayPaymentMethod();
+                }
+            ],
+            [
+                'label' => 'Изменить статус',
+                'format' => 'raw',
+                'value' => function ($model) {
+                    $isCompleted = $model->status === 'completed';
+                    return Html::beginForm(['update-status'], 'post', ['class' => 'd-flex gap-2']) .
+                        Html::hiddenInput('id', $model->id) .
+                        Html::dropDownList('status', $model->status, app\models\Course::optsStatus(), [
+                            'class' => 'form-select form-select-sm',
+                            'style' => 'max-width: 220px;',
+                        ]) .
+                        Html::submitButton('Сохранить', ['class' => 'btn btn-sm btn-primary']) .
+                        Html::endForm();
+                },
             ],
         ],
     ]); ?>

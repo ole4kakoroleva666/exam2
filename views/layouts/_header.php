@@ -26,6 +26,11 @@ $items = [
     ],
 
     [
+        'label' => 'Заявки' , 'url' => ['/admin/index'],
+        'visible' => !Yii::$app->user->isGuest && Yii::$app->user->identity ->isRoleAdmin(),
+    ],
+
+    [
         'label' => 'Авторизация',
         'url' => ['/site/login'],
         'visible' => Yii::$app->user->isGuest,
