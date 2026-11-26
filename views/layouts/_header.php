@@ -18,6 +18,13 @@ $items = [
         'url' => ['/user/create'],
         'visible' => Yii::$app->user->isGuest
     ],
+
+    [
+        'label' => 'Мои заявки', 'url' => ['/course/index'],
+        'visible' => !Yii::$app->user->isGuest && Yii::$app->user->identity ->isRoleUser(),
+        Yii::$app->user->isGuest
+    ],
+
     [
         'label' => 'Авторизация',
         'url' => ['/site/login'],
